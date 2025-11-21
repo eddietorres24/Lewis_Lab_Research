@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=24
 #SBATCH --mem=50gb
 #SBATCH --time=48:00:00
-#SBATCH --output=../MapATAC.%j.out
-#SBATCH --error=../ATAC.%j.err
+#SBATCH --output=..ATAClog/MapATAC.%j.out
+#SBATCH --error=..ATAClog/ATAC.%j.err
 
 cd $SLURM_SUBMIT_DIR
 
@@ -18,7 +18,7 @@ ml GCCcore
 
 source config_Nc.txt
 
-OUTDIR=../${OutputFolderName}
+OUTDIR=${OutputFolderName}
 mkdir ${OUTDIR}
 mkdir ${OUTDIR}/TrimmedReads
 
