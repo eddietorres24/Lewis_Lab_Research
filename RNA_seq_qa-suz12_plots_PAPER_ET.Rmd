@@ -992,8 +992,7 @@ suppressPackageStartupMessages({
 ## =========================
 
 fungidb_go_path <- "Nc_GO_mapping.txt"     # FungiDB mapping (tab-delimited; has ID & name cols)
-de_input        <- "../qa-suz12_RNA-seq_Analysis/csv_files/WT_24hr_AND_qa_24hr__alpha0.05__INTERSECT_DOWN_LFC_ge_1p0.csv"          # <-- can be: data.frame/tibble, file path, or character vector of IDs
-
+de_input        <- ectopic_GO        # <-- can be: data.frame/tibble, file path, or character vector of IDs
 out_tag     <- "CAF1_shared_GO"
 out_res     <- paste0(out_tag, "_BP_enrichment.tsv")
 out_plot    <- paste0(out_tag, "_BP_lollipop.pdf")
