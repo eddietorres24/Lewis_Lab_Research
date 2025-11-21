@@ -2,7 +2,7 @@
 #SBATCH --job-name=Lewislab_ATAC.%j.job
 #SBATCH --partition=batch
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=ad45368@uga.edu
+#SBATCH --mail-user=evt82290@uga.edu
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=24
 #SBATCH --mem=50gb
@@ -13,8 +13,8 @@
 cd $SLURM_SUBMIT_DIR
 
 #read in variables from the config file ($threads, $FASTQ, $OUTDIR, )
-ml GCC/13.3.0
-ml GCCcore/13.3.0
+ml GCC
+ml GCCcore
 
 source config_Nc.txt
 
@@ -24,7 +24,7 @@ mkdir ${OUTDIR}/TrimmedReads
 
 # #process reads using trimGalore
 #
- ml Trim_Galore/0.6.10-GCCcore-12.3.0
+ml Trim_Galore
 trim_galore --paired --length 20 --fastqc --gzip -o ${OUTDIR}/TrimmedReads ${FASTQ}/*fastq\.gz
 # # #
 FILES="${OUTDIR}/TrimmedReads/*R1_001_val_1\.fq\.gz" #Don't forget the *
@@ -100,10 +100,10 @@ do
 mkdir ${OUTDIR}/tmp
 tmp="$OUTDIR/tmp/${name}"
 
- ml SAMtools/1.21-GCC-13.3.0
- ml BWA/0.7.18-GCCcore-13.3.0
- ml picard/3.3.0-Java-17
- ml R/4.4.2-gfbf-2024a
+ ml SAMtools
+ ml BWA
+ ml picard
+ ml R
 # # #
 #
 bwa mem -M -v 3 -a -t $THREADS $GENOME $f $read2 | samtools view -bhSu - | samtools sort -@ $THREADS -T $OUTDIR/BamFiles/tempReps -o "$bam" -
@@ -131,7 +131,7 @@ rm ${tmp}_raw.bam
      --VALIDATION_STRINGENCY SILENT --QUIET TRUE
 #
 #shift file
-  module load deepTools/3.5.5-gfbf-2023a
+  module load deepTools
   alignmentSieve -p $THREADS --ATACshift --bam ${marked_dupes} -o ${tmp}_mark.tmp.bam
   samtools sort -@ $THREADS -O bam -o ${shifted_marked_dupes} ${tmp}_mark.tmp.bam
   samtools index -@ $THREADS ${shifted_marked_dupes}
@@ -146,7 +146,7 @@ rm ${tmp}_raw.bam
  bamCoverage -p $THREADS --Offset 1 3 -bs 1 --smoothLength 6 --MNase --minMappingQuality 25 --effectiveGenomeSize 41037538 --normalizeUsing BPM --minFragmentLength 30 --maxFragmentLength 200  -of bigwig -b ${shifted_marked_dupes} -o "${bw_mnase}_marked.min30.max200.bin1_smooth6_MNase.bw"
 
 #control="/lustre2/scratch/ad45368/Af_ATAC/Run152/MapATAC_Output/SortedBamFiles"
-module load MACS3/3.0.1-gfbf-2023a
+module load MACS3
 macs3 callpeak -t $shifted_marked_dupes --nolambda --format BAMPE --outdir ${OUTDIR}/Peaks/BroadPeaks -n ${name}_bampe --broad-cutoff 0.05 --broad --keep-dup all -q 0.01 -g 41037538
 # macs3 hmmratac -i ${shifted_downsized_marked_dupes} -f BAMPE -n ${name}_hmmr --outdir Peaks/hmmratac -e /lustre2/scratch/ad45368/Af_ATAC/Run152/MapATAC_Output/BroadPeaks/152_N6_Genomic_CEA10_WT__Rep_2_S102_L006_R1_001_val_1.fq.gz_peaks.broadPeak
 
@@ -154,6 +154,6 @@ macs3 callpeak -t $shifted_marked_dupes --nolambda --format BAMPE --outdir ${OUT
 
 done
 
-module load MultiQC/1.28-foss-2024a
+module load MultiQC
 
 multiqc --no-ai ${OUTDIR} -i "Nc_ATAC_qc"
