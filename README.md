@@ -1,2 +1,0 @@
-# Research
-Lewis Lab Research
